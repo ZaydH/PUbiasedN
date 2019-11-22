@@ -2,6 +2,7 @@ import sys
 import h5py
 import allennlp.commands
 import numpy as np
+import nltk
 import torch
 from allennlp.common.file_utils import cached_path
 from nltk.tokenize import word_tokenize
@@ -29,7 +30,7 @@ def generate_dataset(ds_name):
         print('cuda fail')
     for i in range(n):
         A = word_tokenize(newsgroups.data[i])
-        sys.stdout.write('processing document %d\r' % i)
+        sys.stdout.write(f"Processing {ds_name} document {i+1}/{n}\r")
         sys.stdout.flush()
         em = elmo.embed_batch([A])
         em = np.concatenate(
@@ -43,5 +44,6 @@ def generate_dataset(ds_name):
 
 
 if __name__ == "__main__":
+    nltk.download("punkt")
     generate_dataset("train")
     generate_dataset("test")
